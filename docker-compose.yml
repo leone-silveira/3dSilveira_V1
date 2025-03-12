@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  api:
+    build: 
+      context: ./backend
+    container_name: filament_api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    environment:
+      - UVICORN_RELOAD=True
