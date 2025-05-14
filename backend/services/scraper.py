@@ -76,4 +76,4 @@ def get_amazon_filaments():
 
     return filaments
 
-a = get_amazon_filaments()
+# a = get_amazon_filaments()
