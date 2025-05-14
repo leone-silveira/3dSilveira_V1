@@ -1,6 +1,8 @@
 import os
 from dotenv import load_dotenv   # type: ignore
 from flask import Flask, render_template, request, redirect, session, flash, url_for
+from werkzeug.security import generate_password_hash, check_password_hash
+
 
 load_dotenv()
 
@@ -16,14 +18,17 @@ class Filament:
 Filament1 = Filament('Vermelho', 'Volt', 'Vermelho', '1000')
 Filament2 = Filament('Azul piscina', 'National', 'Azul tiffany', '500')
 Filament3 = Filament('Branco', 'National', 'Branco gelo', '300')
-list = [Filament1, Filament2, Filament3]
+filament_list = [Filament1, Filament2, Filament3]
 
 
 class User:
     def __init__(self, name, nickname, password):
         self.name = name
         self.nickname = nickname
-        self.password = password
+        self.password = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
 
 
 list_users = [
@@ -34,7 +39,10 @@ list_users = [
 users = {user.nickname: user for user in list_users}
 
 app = Flask(__name__)
-app.secret_key = os.getenv("API_KEY")
+secret_key = os.getenv("SECRET_KEY")
+if not secret_key:
+    raise RuntimeError("SECRET_KEY environment variable is not set. Please check your .env file.")
+app.secret_key = secret_key
 
 
 @app.route('/')
@@ -42,7 +50,7 @@ def index():
     return render_template(
         'lista.html',
         title='Filaments 3D Silveira',
-        Filaments=list)
+        Filaments=filament_list)
 
 
 @app.route('/new')
@@ -59,7 +67,7 @@ def create():
     description = request.form['description']
     amount = request.form['amount']
     Filament4 = Filament(color, supplier, description, amount)
-    list.append(Filament4)
+    filament_list.append(Filament4)
     return redirect(url_for('index'))
 
 
@@ -76,7 +84,7 @@ def authenticate():
 
     if user_input in users:
         user = users[user_input]
-        if password_input == user.password:
+        if user.check_password(password_input):
             session['user_logged_in'] = user.nickname
             flash(user.nickname + ' logged in')
             return redirect(url_for('new'))
@@ -91,4 +99,5 @@ def logout():
     return redirect(url_for('index'))
 
 
-app.run(debug=True, port=5002)
+if __name__ == '__main__':
+    app.run(debug=os.getenv('FLASK_ENV') == 'development', port=5002)
