@@ -20,7 +20,10 @@ users = {user.nickname: user for user in list_users}
 
 load_dotenv()
 app = Flask(__name__)
-app.secret_key = os.getenv("SECRET_KEY")
+secret_key = os.getenv("SECRET_KEY")
+if not secret_key:
+    raise RuntimeError("SECRET_KEY environment variable is not set. Please check your .env file.")
+app.secret_key = secret_key
 
 
 @app.route('/')
@@ -100,7 +103,7 @@ def authenticate():
     following = request.form.get('following')
     if user_input in users:
         user = users[user_input]
-        if password_input == user.password:
+        if user.check_password(password_input):
             session['user_logged_in'] = user.nickname
             flash(f'{user.nickname} logged in')
             return redirect(following or url_for('index'))
@@ -114,8 +117,5 @@ def logout():
     flash('Logout ok')
     return redirect(url_for('index'))
 
-
-app.run(debug=True, port=5002)
-
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=os.getenv('FLASK_ENV') == 'development', port=5002)
