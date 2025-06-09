@@ -1,24 +1,34 @@
 {%extends "template.html"%}
 {% block conteudo%}
-      <form action="{{url_for('create')}}" method="post">
-        <fieldset>
+    <div class="box" style="width: 50%">
+      <form 
+        action="{{ url_for('edit', id=filament.id) if filament else url_for('create') }}" 
+        method="post">
+         <fieldset>
+          {% if filament %}
+            <input type="hidden" name="id" value="{{ filament.id }}">
+          {% endif %}
           <div class="form-group">
             <label for="color">Color</label>
-            <input type="text" id="color" name="color" class="form-control">
+            <input type="text" id="color" name="color" value="{{ filament.color if filament else '' }}" class="form-control" required>
           </div>
           <div class="form-group">
             <label for="supplier">Supplier</label>
-            <input type="text" id="supplier" name="supplier" class="form-control">
+            <input type="text" id="supplier" name="supplier" value="{{ filament.supplier if filament else '' }}" class="form-control" required>
           </div>
           <div class="form-group">
             <label for="description">Description</label>
-            <input type="text" id="description" name="description" class="form-control">
+            <input type="text" id="description" name="description" value="{{ filament.description if filament else '' }}" class="form-control" required>
           </div>
           <div class="form-group">
             <label for="amount">Amount</label>
-            <input type="text" id="amount" name="amount" class="form-control">
+            <input  type="number" id="amount" name="amount" step="0.1" min="0" max="1000" value="{{ filament.amount if filament else '' }}" class="form-control" required>
           </div>
-          <button type="submit" class="btn btn-primary btn-salvar">Salvar</button>
+          <div style="margin-top:10px">
+            <button type="submit" class="btn btn-primary btn-salvar">Salvar</button>
+            <button type="button" class="btn btn-secondary" onclick="window.location.href='{{ url_for('index') }}'">Voltar</button>
+          </div>
         </fieldset>
       </form>
+    </div>
 {% endblock %}
