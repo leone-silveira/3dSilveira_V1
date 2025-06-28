@@ -1,14 +1,16 @@
 from fastapi import FastAPI
 import uvicorn
-from routers import filaments
+from routers import filaments, user
 
 app = FastAPI(
     title="Filament API",
     description="API for 3d filaments purpose. Analysis for minor cost",
-    version="1.0.0"1
+    version="1.0.0"
 )
 
 app.include_router(filaments.router, prefix="/filaments")
+app.include_router(user.router, prefix="/users")
+
 
 @app.get("/")
 async def root():

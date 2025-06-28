@@ -117,5 +117,6 @@ def logout():
     flash('Logout ok')
     return redirect(url_for('index'))
 
+
 if __name__ == '__main__':
     app.run(debug=os.getenv('FLASK_ENV') == 'development', port=5002)
