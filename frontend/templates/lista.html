@@ -1,55 +1,64 @@
-{%extends "template.html"%}
-{% block conteudo%}
+{%extends "template.html"%} {% block conteudo%}
 
 <table class="table table-striped table-responsive table-borded">
-    <caption class="p-1 mb-2 bg-light text-black">List of available filaments</caption>
-    <thead class="table-dark">
-        <tr class="text-center">
-            <th class="fs-2">id</th>
-            <th class="fs-2">Color</th>
-            <th class="fs-2">Supplier</th>
-            <th class="fs-2">Description</th>
-            <th class="fs-2">Amount (g)</th>
-        </tr>
-    </thead>
-    <tbody class="text-center">
-        {% for filament in Filaments %}
-        {% if filament.activate %}
-        <tr>
-            <td><input value="{{ filament.id }}" name="select_row" type="radio"></td>
-            <td>{{filament.color}}</td>
-            <td>{{filament.supplier}}</td>
-            <td>{{filament.description}}</td>
-            <td>{{filament.amount}}</td>
-        </tr>
-        {% endif %}
-        {%endfor%}
-    </tbody>
+  <caption class="p-1 mb-2 bg-light text-black">
+    List of available filaments
+  </caption>
+  <thead class="table-dark">
+    <tr class="text-center">
+      <th class="fs-2">id</th>
+      <th class="fs-2">Description</th>
+      <th class="fs-2">Color</th>
+      <th class="fs-2">brand</th>
+      <th class="fs-2">Amount (g)</th>
+    </tr>
+  </thead>
+  <tbody class="text-center">
+    {% for filament in Filaments %} {% if filament.activate %}
+    <tr>
+      <td>
+        <input value="{{ filament.id }}" name="select_row" type="radio" />
+      </td>
+      <td>{{filament.filament_name}}</td>
+      <td>{{filament.color}}</td>
+      <td>{{filament.brand}}</td>
+      <td>{{filament.quantity}}</td>
+    </tr>
+    {% endif %} {%endfor%}
+  </tbody>
 </table>
-<button type="button" class="btn btn-primary" onclick="window.location.href='{{ url_for('new') }}'"> +
-    Filament</button>
-<button type="button" class="btn btn-warning" onclick="editFilament()">Edit Filament</button>
-<button type="button" class="btn btn-danger" onclick="cancelFilament()">Cancel
-    Filament</button>
+<button
+  type="button"
+  class="btn btn-primary"
+  onclick="window.location.href='{{ url_for('new') }}'"
+>
+  + Filament
+</button>
+<button type="button" class="btn btn-warning" onclick="editFilament()">
+  Edit Filament
+</button>
+<button type="button" class="btn btn-danger" onclick="cancelFilament()">
+  Cancel Filament
+</button>
 
 <script>
-    function editFilament() {
-        const selected = document.querySelector('input[name="select_row"]:checked');
-        if (selected) {
-            const id = selected.value;
-            window.location.href = `/edit/${id}`;
-        } else {
-            alert("Please select a filament to edit.");
-        }
+  function editFilament() {
+    const selected = document.querySelector('input[name="select_row"]:checked');
+    if (selected) {
+      const id = selected.value;
+      window.location.href = `/edit/${id}`;
+    } else {
+      alert("Please select a filament to edit.");
     }
-        function cancelFilament() {
-        const selected = document.querySelector('input[name="select_row"]:checked');
-        if (selected) {
-            const id = selected.value;
-            window.location.href = `/delete/${id}`;
-        } else {
-            alert("Please select a filament to edit.");
-        }
+  }
+  function cancelFilament() {
+    const selected = document.querySelector('input[name="select_row"]:checked');
+    if (selected) {
+      const id = selected.value;
+      window.location.href = `/delete/${id}`;
+    } else {
+      alert("Please select a filament to edit.");
     }
+  }
 </script>
 {% endblock %}
