@@ -104,9 +104,9 @@ def edit(id=None):
     filament = get_filament_per_id.json()
     if request.method == 'POST':
         color = request.form['color']
-        supplier = request.form['supplier']
-        description = request.form['description']
-        amount = request.form['amount']
+        supplier = request.form['brand']
+        description = request.form['filament_name']
+        amount = request.form['quantity']
         activate = filament['activate']
         data = {
             "filament_name": description,
