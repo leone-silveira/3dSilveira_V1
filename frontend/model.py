@@ -6,10 +6,10 @@ class User:
 
 
 class Filament:
-    def __init__(self, id, color, supplier, description, amount, activate):
+    def __init__(self, id, color, brand, description, amount, activate):
         self.id = id
         self.color = color
-        self.supplier = supplier
+        self.brand = brand
         self.description = description
         self.amount = amount
         self.activate = activate

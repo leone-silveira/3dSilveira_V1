@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from services import user_service
 from schemas.user import UserCreate, UserOut
 
-router = APIRouter(prefix="/users", tags=["Users"])
+router = APIRouter(tags=["Users"])
 
 
 def get_db():
@@ -51,7 +51,7 @@ def update_user_id(
     return update_user_id
 
 
-@router.put("/{user_id}", response_model=UserOut)
+@router.delete("/{user_id}")
 def delete_user_id(
     user_id: int,
     db: Session = Depends(get_db)
@@ -60,3 +60,15 @@ def delete_user_id(
     if delete_user_id is None:
         raise HTTPException(status_code=404, detail='User not found')
     return {"detail": "User deleted successfully"}
+
+
+@router.put("/{user_id}/{status}")
+def update_user_status(
+    user_id: int,
+    status: bool,
+    db: Session = Depends(get_db)
+):
+    update_user_status = user_service.update_user_status(user_id, status, db)
+    if update_user_status is None:
+        raise HTTPException(detail="User not found")
+    return {"detail": f"User is {status} "}
