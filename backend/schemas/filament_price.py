@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 
-class FilamentSchema(BaseModel):
+class FilamentPriceSchema(BaseModel):
     name: str
     brand: str
     price: float

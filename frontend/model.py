@@ -13,13 +13,3 @@ class Filament:
         self.description = description
         self.amount = amount
         self.activate = activate
-
-# from typing import TypedDict
-
-# class Filament(TypedDict):
-#     id: int
-#     filament_name: str
-#     color: str
-#     brand: str
-#     quantity: float
-#     activate: bool

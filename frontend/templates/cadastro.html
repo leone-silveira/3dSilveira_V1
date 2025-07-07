@@ -20,33 +20,33 @@
         />
       </div>
       <div class="form-group">
-        <label for="supplier">Supplier</label>
+        <label for="brand">Supplier</label>
         <input
           type="text"
-          id="supplier"
-          name="supplier"
+          id="brand"
+          name="brand"
           value="{{ filament.brand if filament else '' }}"
           class="form-control"
           required
         />
       </div>
       <div class="form-group">
-        <label for="description">Description</label>
+        <label for="filament_name">Description</label>
         <input
           type="text"
-          id="description"
-          name="description"
+          id="filament_name"
+          name="filament_name"
           value="{{ filament.filament_name if filament else '' }}"
           class="form-control"
           required
         />
       </div>
       <div class="form-group">
-        <label for="amount">Amount</label>
+        <label for="quantity">Quantity</label>
         <input
           type="number"
-          id="amount"
-          name="amount"
+          id="quantity"
+          name="quantity"
           step="0.1"
           min="0"
           max="1000"

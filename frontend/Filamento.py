@@ -1,7 +1,8 @@
 import os
 import requests
 from dotenv import load_dotenv   # type: ignore
-from flask import Flask, json, render_template, request, redirect, session, flash, url_for
+from flask import Flask, render_template, request, redirect, session, \
+    flash, url_for
 from model import Filament, User
 from werkzeug.exceptions import HTTPException
 
@@ -12,6 +13,7 @@ filament_list = [
     Filament(3, 'Branco', 'National', 'Branco gelo', '300', True)
 ]
 
+# TODO: Connect backend to users (with hash password)
 list_users = [
     User('Luiza', 'Lu', '1234'),
     User('Leone', 'Leo', '1235'),
@@ -26,7 +28,8 @@ app = Flask(__name__)
 secret_key = os.getenv("SECRET_KEY")
 if not secret_key:
     raise RuntimeError(
-        "SECRET_KEY environment variable is not set. Please check your .env file.")
+        "SECRET_KEY environment variable is not set. \
+            Please check your .env file.")
 app.secret_key = secret_key
 FILAMENT_URL = 'http://127.0.0.1:8000/filaments_stock'
 
@@ -43,7 +46,7 @@ def index():
             title='Filaments 3D Silveira',
             Filaments=filaments)
     except Exception as e:
-        raise HTTPException(response=e, description="OUT OF SERVICE")
+        raise HTTPException(description="OUT OF SERVICE") from e
 
 
 @app.route('/create', methods=['POST',])
@@ -81,9 +84,13 @@ def new():
 def delete(id=None):
     if 'user_logged_in' not in session:
         return redirect(url_for('login', following=request.url))
-    inativate_filament_resposte = requests.put(f'{FILAMENT_URL}/{id}/False')
-    print(inativate_filament_resposte.status_code)
-    flash("Filament deleted", 'success')
+    try:
+        inactivate_filament_response = requests.put(
+            f'{FILAMENT_URL}/{id}/False')
+        inactivate_filament_response.raise_for_status()
+        flash("Filament deleted", 'success')
+    except requests.RequestException as e:
+        flash(f"Error deleting filament: {e}", 'error')
     return redirect(url_for('index'))
 
 

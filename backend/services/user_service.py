@@ -30,10 +30,22 @@ def update_user(user_id: int, user_data: UserCreate, db: Session):
     db.refresh(user)
 
 
+def update_user_status(user_id: int, status: bool, db: Session):
+    user = get_user_by_id(db, user_id)
+    if user is None:
+        return None
+
+    user.activate = status  # Don't delete just update
+    db.commit()
+    db.refresh(user)
+    return user
+
+
 def delete_user(user_id: int, db: Session):
     user = get_user_by_id(db, user_id)
     if user is None:
         return None
+
     db.delete(user)
     db.commit()
     return user
