@@ -1,19 +1,6 @@
-from models.users import User
-from sqlalchemy.orm import Session
-from engine import create_connection
+from backend.services.populate_service import populate_db
+from backend.database.engine import engine
+from backend.database.base import Base
 
-
-def populate(engine):
-    with Session(engine) as session:
-        spongebob = User(
-            name="spongebob",
-            email="spongebob@sqlalchemy.org",
-            password='123'
-        )
-        sandy = User(
-            name="sandy",
-            addresses="spongebob@sqlalchemy.org",
-            password='123'
-        )
-        session.add_all([spongebob, sandy])
-        session.commit()
+Base.metadata.create_all(bind=engine)
+populate_db()

@@ -2,9 +2,9 @@ version: '3.8'
 
 services:
   api:
-    build: 
+    build:
       context: ./backend
-    container_name: filament_api
+    container_name: filament-api
     ports:
       - "8000:8000"
     volumes:
@@ -24,5 +24,22 @@ services:
     volumes:
       - mssql_data:/var/opt/mssql
 
+  frontend-flask:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.flask
+    container_name: frontend-flask
+    expose:
+      - "5000"
+
+  frontend-nginx:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.nginx
+    container_name: frontend-nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - frontend-flask
 volumes:
   mssql_data:

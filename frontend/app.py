@@ -3,15 +3,9 @@ import requests
 from dotenv import load_dotenv   # type: ignore
 from flask import Flask, render_template, request, redirect, session, \
     flash, url_for
-from model import Filament, User
+from model import User
 from werkzeug.exceptions import HTTPException
 
-
-filament_list = [
-    Filament(1, 'Vermelho', 'Volt', 'Vermelho', '1000', True),
-    Filament(2, 'Azul piscina', 'National', 'Azul tiffany', '500', True),
-    Filament(3, 'Branco', 'National', 'Branco gelo', '300', True)
-]
 
 # TODO: Connect backend to users (with hash password)
 list_users = [
@@ -31,7 +25,7 @@ if not secret_key:
         "SECRET_KEY environment variable is not set. \
             Please check your .env file.")
 app.secret_key = secret_key
-FILAMENT_URL = 'http://127.0.0.1:8000/filaments_stock'
+FILAMENT_URL = 'http://filament-api:8000/filaments_stock'
 
 
 @app.route('/')
@@ -40,12 +34,13 @@ def index():
         response = requests.get(FILAMENT_URL)
         response.raise_for_status()
         filaments = response.json()
-        print(filaments)
+        print("--------->", filaments)
         return render_template(
             'lista.html',
             title='Filaments 3D Silveira',
             Filaments=filaments)
     except Exception as e:
+        print("--------->", e)
         raise HTTPException(description="OUT OF SERVICE") from e
 
 
@@ -53,14 +48,14 @@ def index():
 def create():
     try:
         color = request.form['color']
-        brand = request.form['supplier']
-        description = request.form['description']
-        amount = request.form['amount']
+        brand = request.form['brand']
+        filament_name = request.form['filament_name']
+        quantity = request.form['quantity']
         data = {
-            "filament_name": description,
+            "filament_name": filament_name,
             "color": color,
             "brand": brand,
-            "quantity": float(amount),
+            "quantity": float(quantity),
             "activate": True
         }
         create_response = requests.post(FILAMENT_URL, json=data)
@@ -156,4 +151,5 @@ def logout():
 
 
 if __name__ == '__main__':
-    app.run(debug=os.getenv('FLASK_ENV') == 'development', port=5002)
+    app.run(host='0.0.0.0', port=5000, debug=os.getenv(
+        'FLASK_ENV') == 'development')
