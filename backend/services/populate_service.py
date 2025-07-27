@@ -9,7 +9,7 @@ def populate_db():
         users = [
             User(
                 username="leone",
-                password="123456",  # ou só "123456" se não tiver hash
+                password="123456",
                 email="leone@example.com",
                 activate=True
             ),
